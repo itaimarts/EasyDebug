@@ -1,59 +1,129 @@
 package com.dell.easydebug.ui;
 
+import com.dell.easydebug.model.JarReplacementService;
+import com.dell.easydebug.model.RemoteDebugService;
+import com.dell.easydebug.model.RpaDetails;
+import com.dell.easydebug.model.RpcsDetails;
 import com.intellij.openapi.wm.ToolWindow;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class MyToolWindow {
 
-	private JButton hideToolWindowButton;
+	private RemoteDebugService debugService;
+	private JarReplacementService jarReplacementService;
+
 	private JPanel myToolWindowContent;
 	private JTabbedPane tabbedPane;
-	private JFormattedTextField rpaIpTextField;
-	private JFormattedTextField rpaUserTextField;
-	private JPasswordField rpaPasswordField;
+
+	private JFormattedTextField rpaIpTextFieldForRemoteDebug;
+	private JFormattedTextField rpaUserTextFieldForRemoteDebug;
+	private JPasswordField rpaPasswordFieldForRemoteDebug;
 	private JButton debugButton;
 
-	private String rpaIp = "127.0.0.1";
-	private String rpaUser = "root";
-	private String rpaPass = "";
+	private JFormattedTextField rpaIpTextFieldForJarReplacement;
+	private JFormattedTextField rpaUserTextFieldForJarReplacement;
+	private JPasswordField rpaPasswordFieldForJarReplacement;
+	private JSpinner rpcsNumberSpinnerForJarReplacement;
+	private JFormattedTextField rpcsUserTextFieldForJarReplacement;
+	private JPasswordField rpcsPasswordFieldForJarReplacement;
+	private JButton replaceJarButton;
+
+	private RpaDetails rpaDetails = new RpaDetails();
+	private RpcsDetails rpcsDetails = new RpcsDetails();
 
 	MyToolWindow(ToolWindow toolWindow) {
 
-		rpaIpTextField.addKeyListener(new KeyAdapter() {
+		rpaIpTextFieldForRemoteDebug.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				super.keyReleased(e);
-				rpaIp = rpaIpTextField.getText();
+				rpaDetails.setRpaIp(rpaIpTextFieldForRemoteDebug.getText());
 			}
 		});
-		rpaUserTextField.addKeyListener(new KeyAdapter() {
+		rpaUserTextFieldForRemoteDebug.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				super.keyReleased(e);
-				rpaUser = rpaUserTextField.getText();
+				rpaDetails.setRpaUser(rpaUserTextFieldForRemoteDebug.getText());
 			}
 		});
-		rpaPasswordField.addKeyListener(new KeyAdapter() {
+		rpaPasswordFieldForRemoteDebug.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				super.keyReleased(e);
-				rpaPass = String.valueOf(rpaPasswordField.getPassword());
+				rpaDetails.setRpaPass(rpaPasswordFieldForRemoteDebug.getPassword());
 			}
 		});
 
-		debugButton.addActionListener(event -> excuteRemoteDebug());
+		debugButton.addActionListener(event -> executeRemoteDebug());
 
+		rpaIpTextFieldForJarReplacement.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				super.keyReleased(e);
+				rpaDetails.setRpaIp(rpaIpTextFieldForJarReplacement.getText());
+			}
+		});
+		rpaUserTextFieldForJarReplacement.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				super.keyReleased(e);
+				rpaDetails.setRpaUser(rpaUserTextFieldForJarReplacement.getText());
+			}
+		});
+
+		rpcsNumberSpinnerForJarReplacement.addPropertyChangeListener(event -> rpcsDetails.setRpcsNum((Integer) rpcsNumberSpinnerForJarReplacement.getValue()));
+
+		rpaPasswordFieldForJarReplacement.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				super.keyReleased(e);
+				rpaDetails.setRpaPass(rpaPasswordFieldForJarReplacement.getPassword());
+			}
+		});
+
+		rpcsUserTextFieldForJarReplacement.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				super.keyReleased(e);
+				rpcsDetails.setRpcsUser(rpcsUserTextFieldForJarReplacement.getText());
+			}
+		});
+
+		rpcsPasswordFieldForJarReplacement.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				super.keyReleased(e);
+				rpcsDetails.setRpcsPass(rpcsPasswordFieldForJarReplacement.getPassword());
+			}
+		});
+
+
+		replaceJarButton.addActionListener(event -> executeJarReplacement());
 	}
 
-	private void excuteRemoteDebug() {
-		System.out.println("got remote debug request with params : " +
-				"RPA IP=" + rpaIp + ", User=" + rpaUser + ", Pass=" + rpaPass);
+	private void executeJarReplacement() {
+		System.out.println("got Jar replacement request with params : " +
+				"RPA IP=" + rpaDetails.getRpaIp() +
+				", User=" + rpaDetails.getRpaUser() +
+				", Pass=" + rpaDetails.getRpaPass() +
+				", Rpcs Num=" + rpcsDetails.getRpcsNum() +
+				", User=" + rpcsDetails.getRpcsUser() +
+				", Pass=" + rpcsDetails.getRpcsPass());
 
+		jarReplacementService.replaceJar(rpaDetails, rpcsDetails);
+	}
+
+	private void executeRemoteDebug() {
+		System.out.println("got remote debug request with params : " +
+				"RPA IP=" + rpaDetails.getRpaIp() +
+				", User=" + rpaDetails.getRpaUser() +
+				", Pass=" + rpaDetails.getRpaPass());
+
+		debugService.debug(rpaDetails);
 	}
 
 	JPanel getContent() {
