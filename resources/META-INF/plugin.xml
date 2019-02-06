@@ -25,7 +25,8 @@
   -->
 
   <extensions defaultExtensionNs="com.intellij">
-    <toolWindow id="Easy Debug" icon="/myToolWindow/plus.png" anchor="right" factoryClass="com.dell.easydebug.ui.ToolWindowFactoryImpl"/>  </extensions>
+    <toolWindow id="Easy Debug" icon="/myToolWindow/plus.png" anchor="right" factoryClass="com.dell.easydebug.ui.ToolWindowFactoryImpl"/>
+  </extensions>
   <actions>
     <!-- Add your actions here -->
   </actions>
