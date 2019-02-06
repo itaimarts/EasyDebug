@@ -6,8 +6,6 @@ import com.dell.easydebug.utils.ssh.SshExec;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
-import java.io.IOException;
-
 import static com.dell.easydebug.utils.ssh.SshCommands.*;
 
 public class ConfigureRpaToDebug implements RemoteDebugService {
@@ -15,10 +13,10 @@ public class ConfigureRpaToDebug implements RemoteDebugService {
     Session session;
 
     @Override
-    public void debug(RpaDetails rpaDetails) {
+    public void debug(RpaDetails rpaDetails, String precess) {
         try {
             configureRpaProcessToWorkInDebugMode(rpaDetails.getRpaUser()+"@"+rpaDetails.getRpaIp(),
-                    rpaDetails.getRpaPass(), Process.CONNECTOR);
+                    rpaDetails.getRpaPass(), Process.valueOf(precess));
         } catch (JSchException e) {
             e.printStackTrace();
         }

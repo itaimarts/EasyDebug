@@ -22,6 +22,7 @@ public class MyToolWindow {
 	private JFormattedTextField rpaIpTextFieldForRemoteDebug;
 	private JFormattedTextField rpaUserTextFieldForRemoteDebug;
 	private JPasswordField rpaPasswordFieldForRemoteDebug;
+	private JComboBox<String> precessComboBox;
 	private JButton debugButton;
 
 	private JFormattedTextField rpaIpTextFieldForJarReplacement;
@@ -247,7 +248,8 @@ public class MyToolWindow {
 				", User=" + rpaDetails.getRpaUser() +
 				", Pass=" + rpaDetails.getRpaPass());
 
-		debugService.debug(rpaDetails);
+		String precess = precessComboBox.getItemAt(precessComboBox.getSelectedIndex());
+		debugService.debug(rpaDetails, precess);
 	}
 
 	private void executeResetVersion() {

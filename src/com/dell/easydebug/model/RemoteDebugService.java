@@ -1,5 +1,5 @@
 package com.dell.easydebug.model;
 
 public interface RemoteDebugService {
-	void debug(RpaDetails rpaDetails);
+	void debug(RpaDetails rpaDetails, String precess);
 }
