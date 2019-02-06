@@ -1,10 +1,10 @@
-import com.dell.easydebug.ui.utils.ssh.SshExec;
+import com.dell.easydebug.utils.ssh.SshExec;
 import com.jcraft.jsch.JSchException;
 import org.junit.Test;
 
 import java.io.IOException;
 
-import static com.dell.easydebug.ui.utils.ssh.SshCommands.INSERT_CONNECTOR_DEBUG_CONFIGURATION;
+import static com.dell.easydebug.utils.ssh.SshCommands.INSERT_CONNECTOR_DEBUG_CONFIGURATION;
 
 public class debugTest {
     @Test
