@@ -1,0 +1,29 @@
+<idea-plugin>
+  <id>com.your.company.unique.plugin.id</id>
+  <name>Run Configuration</name>
+  <version>1.0</version>
+  <vendor>EasyDebug</vendor>
+
+  <description>Illustration of working with run configurations</description>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+  <idea-version since-build="173.0"/>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+       on how to target different products -->
+
+  <depends>com.intellij.modules.lang</depends>
+
+  <!--<extensions defaultExtensionNs="com.intellij">-->
+    <!--&lt;!&ndash; Add your extensions here &ndash;&gt;-->
+  <!--</extensions>-->
+
+  <extensions defaultExtensionNs="com.intellij">
+    <configurationType implementation="configurations.DemoRunConfigurationType"/>
+  </extensions>
+
+  <actions>
+    <!-- Add your actions here -->
+  </actions>
+
+</idea-plugin>
