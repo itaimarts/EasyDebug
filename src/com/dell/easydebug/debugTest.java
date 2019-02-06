@@ -7,14 +7,20 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import static com.dell.easydebug.remotedebug.ConfigureRpaToDebug.configureRpaProcessToWorkInDebugMode;
 import static com.dell.easydebug.remotedebug.ConfigureRpaToDebug.isRpaDebugConfigured;
 import static com.dell.easydebug.utils.ssh.SshCommands.INSERT_CONNECTOR_DEBUG_CONFIGURATION;
 
 public class debugTest {
     @Test
     public void testDebug() throws IOException, JSchException {
-        configureRpaProcessToWorkInDebugMode
-                ("root@10.76.57.57", "admin", ConfigureRpaToDebug.Process.TOMCAT);
+        isRpaDebugConfigured("root@10.76.57.57", "admin", ConfigureRpaToDebug.Process.CONNECTOR);
+
+        SshExec admin = new SshExec("root@10.76.57.57", "admin");
+        admin.connect();
+
+        int i = admin.execCommand(INSERT_CONNECTOR_DEBUG_CONFIGURATION).getKey();
+        System.out.println(i);
+
+        isRpaDebugConfigured("root@10.76.57.57", "admin", ConfigureRpaToDebug.Process.CONNECTOR);
     }
 }

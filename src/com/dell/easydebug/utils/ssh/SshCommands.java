@@ -14,4 +14,27 @@ public class SshCommands {
             "grep -F \"java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005\" /home/kos/RPServers/apache-tomcat/bin/tomcat-start.sh";
     public static final String IS_DEBUG_CONFIGURED_IN_CONNECTORS =
             "grep -F \"java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005\" /home/kos/connectors/connectors_loop.tcsh";
+
+    public static final String RESET_VERSION =
+        "cd %s\n" +
+            "\n" +
+            "git reset --soft HEAD^\n" +
+            "\n" +
+            "git stash\n" +
+            "\n" +
+            "git pull\n" +
+            "\n" +
+            "git reset --hard v_%s\n" +
+            "\n" +
+            "git stash pop";
+
+    public static final String GET_TAGGED_COMMIT_VERSION_LIST =
+        "cd %s\n" +
+            "\n" +
+            "git tag --contains HEAD\n";
+
+    public static final String GET_UNTAGGED_COMMIT_VERSION =
+        "cd %s\n" +
+            "\n" +
+            "git describe --tags\n";
 }

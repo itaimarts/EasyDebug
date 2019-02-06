@@ -2,7 +2,9 @@ package com.dell.easydebug.ui;
 
 import com.dell.easydebug.model.*;
 import com.dell.easydebug.remotedebug.ConfigureRpaToDebug;
+import com.dell.easydebug.reset.version.ResetVersion;
 import com.intellij.openapi.wm.ToolWindow;
+import com.jcraft.jsch.JSchException;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -57,6 +59,8 @@ public class MyToolWindow {
 		setEventForVersionReset();
 
 		setEventForTabSwitch();
+
+		versionsService = new ResetVersion();
 
 	}
 
@@ -221,8 +225,13 @@ public class MyToolWindow {
 				", User=" + rpcsDetails.getRpcsUser() +
 				", Pass=" + rpcsDetails.getRpcsPass());
 
-		String branchVersion = versionsService.getBranchVersion(rpcsDetails);
-		String rpaVersion = versionsService.getRpaVersion(rpaDetails);
+		String branchVersion = "";//versionsService.getBranchVersion(rpcsDetails);
+		String rpaVersion = null;
+		try {
+			rpaVersion = versionsService.getRpaVersion(rpaDetails);
+		} catch (JSchException e) {
+			e.printStackTrace();
+		}
 
 		branchVersionTextField.setText(branchVersion);
 		rpaVersionTextField.setText(rpaVersion);

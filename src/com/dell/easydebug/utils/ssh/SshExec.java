@@ -3,6 +3,7 @@ package com.dell.easydebug.utils.ssh;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSchException;
+import javafx.util.Pair;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -25,7 +26,7 @@ public class SshExec extends SshSession {
         Arrays.stream(commands).forEach(this::execCommand);
     }
 
-    public int execCommand(String command) {
+    public Pair<Integer, String> execCommand(String command) {
         final Channel channel;
         try {
             channel = getSession().openChannel(CHANNEL_TYPE);
@@ -46,7 +47,7 @@ public class SshExec extends SshSession {
                 outputStream = out.toString();
                 System.out.println(outputStream);
 
-                return exitCode;
+                return new Pair(exitCode, outputStream);
             }
         } catch (JSchException | IOException e) {
             throw new RuntimeException(e);

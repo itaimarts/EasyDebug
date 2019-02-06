@@ -54,11 +54,11 @@ public class ConfigureRpaToDebug implements RemoteDebugService {
         SshExec admin = new SshExec(rpaIpAndUserName, password);
         admin.connect();
         if (Process.CONNECTOR.equals(process)) {
-            boolean b = admin.execCommand(insertConnectorDebugConfiguration) == 0;
+            boolean b = admin.execCommand(insertConnectorDebugConfiguration).getKey() == 0;
             admin.close();
             return b;
         } else {
-            boolean b = admin.execCommand(insertTomcatDebugConfiguration) == 0;
+            boolean b = admin.execCommand(insertTomcatDebugConfiguration).getKey() == 0;
             admin.close();
             return b;
         }
