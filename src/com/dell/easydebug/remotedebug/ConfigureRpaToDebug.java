@@ -1,9 +1,12 @@
 package com.dell.easydebug.remotedebug;
 
-import com.jcraft.jsch.*;
+import com.dell.easydebug.utils.ssh.SshExec;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
 
 import java.io.IOException;
-import java.io.InputStream;
+
+import static com.dell.easydebug.utils.ssh.SshCommands.*;
 
 public class ConfigureRpaToDebug {
 
@@ -16,47 +19,30 @@ public class ConfigureRpaToDebug {
 
     public void configureRpaProcessToWorkInDebugMode(String rpaIp, String userName, String password, Process process) throws JSchException, IOException {
         // connect to RPA
-        JSch jsch = new JSch();
-        java.util.Properties config = new java.util.Properties();
-        config.put("StrictHostKeyChecking", "no");
-        session = jsch.getSession(userName, rpaIp, 22);
-        session.setConfig(config);
-        session.setPassword(password);
-        session.connect();
-        System.out.println(sendCommand("version"));
 
         // replace looper
         // restart process
 
     }
 
-    public String sendCommand(String command)
-    {
-        StringBuilder outputBuffer = new StringBuilder();
-
-        try
-        {
-            Channel channel = session.openChannel("exec");
-            ((ChannelExec)channel).setCommand(command);
-            InputStream commandOutput = channel.getInputStream();
-            channel.connect();
-            int readByte = commandOutput.read();
-
-            while(readByte != 0xffffffff)
-            {
-                outputBuffer.append((char)readByte);
-                readByte = commandOutput.read();
-            }
-
-            channel.disconnect();
+    public static boolean configureRpaToDebugMode(String rpaIpAndUserName, String password, Process process) throws JSchException {
+        SshExec admin = new SshExec(rpaIpAndUserName, password);
+        admin.connect();
+        if (Process.CONNECTOR.equals(process)) {
+            return admin.execCommand(IS_DEBUG_CONFIGURED_IN_CONNECTORS) == 0;
+        } else {
+            return admin.execCommand(IS_DEBUG_CONFIGURED_IN_TOMCAT) == 0;
         }
-        catch(IOException | JSchException ioX)
-        {
-            System.out.println(ioX.getMessage());
-            return null;
-        }
+    }
 
-        return outputBuffer.toString();
+    public static boolean isRpaDebugConfigured(String rpaIpAndUserName, String password, Process process) throws JSchException {
+        SshExec admin = new SshExec(rpaIpAndUserName, password);
+        admin.connect();
+        if (Process.CONNECTOR.equals(process)) {
+            return admin.execCommand(IS_DEBUG_CONFIGURED_IN_CONNECTORS) == 0;
+        } else {
+            return admin.execCommand(IS_DEBUG_CONFIGURED_IN_TOMCAT) == 0;
+        }
     }
 
 }
