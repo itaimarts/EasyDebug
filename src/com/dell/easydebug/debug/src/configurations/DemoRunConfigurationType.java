@@ -5,7 +5,6 @@ import com.intellij.execution.configurations.ConfigurationFactory;
 import com.intellij.icons.AllIcons;
 import org.jetbrains.annotations.NotNull;
 
-
 import javax.swing.*;
 
 public class DemoRunConfigurationType implements ConfigurationType {

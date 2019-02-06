@@ -11,12 +11,7 @@
 
   <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
        on how to target different products -->
-
   <depends>com.intellij.modules.lang</depends>
-
-  <!--<extensions defaultExtensionNs="com.intellij">-->
-    <!--&lt;!&ndash; Add your extensions here &ndash;&gt;-->
-  <!--</extensions>-->
 
   <extensions defaultExtensionNs="com.intellij">
     <configurationType implementation="configurations.DemoRunConfigurationType"/>
