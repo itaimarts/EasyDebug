@@ -4,8 +4,8 @@ import com.dell.easydebug.model.*;
 import com.intellij.openapi.wm.ToolWindow;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
@@ -38,6 +38,9 @@ public class MyToolWindow {
 	private JFormattedTextField branchVersionTextField;
 	private JButton getVersionsButton;
 	private JButton resetVersionButton;
+	private JSpinner rpcsNumberSpinnerForVersionReset;
+	private JFormattedTextField rpcsUserTextFieldForVersionReset;
+	private JPasswordField rpcsPasswordFieldForVersionReset;
 
 
 	private RpaDetails rpaDetails = new RpaDetails();
@@ -49,6 +52,48 @@ public class MyToolWindow {
 
 		setEventsForJarReplacement();
 
+		setEventForVersionReset();
+
+		setEventForTabSwitch();
+
+	}
+
+	private void setEventForTabSwitch() {
+		tabbedPane.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				setRpaDetailsOnAllTabs();
+				setRpcsDetailsOnAllTabs();
+			}
+		});
+	}
+
+	private void setRpcsDetailsOnAllTabs() {
+		rpcsNumberSpinnerForJarReplacement.setValue(rpcsDetails.getRpcsNum());
+		rpcsNumberSpinnerForVersionReset.setValue(rpcsDetails.getRpcsNum());
+
+		rpcsUserTextFieldForJarReplacement.setText(rpcsDetails.getRpcsUser());
+		rpcsUserTextFieldForVersionReset.setText(rpcsDetails.getRpcsUser());
+
+		rpcsPasswordFieldForJarReplacement.setText(rpcsDetails.getRpcsPass());
+		rpcsPasswordFieldForVersionReset.setText(rpcsDetails.getRpcsPass());
+	}
+
+	private void setRpaDetailsOnAllTabs() {
+		rpaIpTextFieldForJarReplacement.setText(rpaDetails.getRpaIp());
+		rpaIpTextFieldForRemoteDebug.setText(rpaDetails.getRpaIp());
+		rpaIpTextFieldForVersionReset.setText(rpaDetails.getRpaIp());
+
+		rpaUserTextFieldForJarReplacement.setText(rpaDetails.getRpaUser());
+		rpaUserTextFieldForRemoteDebug.setText(rpaDetails.getRpaUser());
+		rpaUserTextFieldForVersionReset.setText(rpaDetails.getRpaUser());
+
+		rpaPasswordFieldForJarReplacement.setText(rpaDetails.getRpaPass());
+		rpaPasswordFieldForRemoteDebug.setText(rpaDetails.getRpaPass());
+		rpaPasswordFieldForVersionReset.setText(rpaDetails.getRpaPass());
+	}
+
+	private void setEventForVersionReset() {
 		rpaIpTextFieldForVersionReset.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -60,24 +105,38 @@ public class MyToolWindow {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				super.keyReleased(e);
-				rpaDetails.setRpaUser(rpaIpTextFieldForVersionReset.getText());
+				rpaDetails.setRpaUser(rpaUserTextFieldForVersionReset.getText());
 			}
 		});
 		rpaPasswordFieldForVersionReset.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				super.keyReleased(e);
-				rpaDetails.setRpaPass(rpaIpTextFieldForVersionReset.getText());
+				rpaDetails.setRpaPass(rpaPasswordFieldForVersionReset.getPassword());
 			}
 		});
 
+		getVersionsButton.addActionListener(event -> executeGetVersions());
 
-		getVersionsButton.addActionListener(new ActionListener() {
+		rpcsNumberSpinnerForVersionReset.addPropertyChangeListener(event -> rpcsDetails.setRpcsNum((Integer) rpcsNumberSpinnerForVersionReset.getValue()));
+
+		rpcsUserTextFieldForVersionReset.addKeyListener(new KeyAdapter() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				executeGetVersions();
+			public void keyReleased(KeyEvent e) {
+				super.keyReleased(e);
+				rpcsDetails.setRpcsUser(rpcsUserTextFieldForVersionReset.getText());
 			}
 		});
+
+		rpcsPasswordFieldForVersionReset.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				super.keyReleased(e);
+				rpcsDetails.setRpcsPass(rpcsPasswordFieldForVersionReset.getPassword());
+			}
+		});
+
+		resetVersionButton.addActionListener(event -> executeResetVersion());
 	}
 
 	private void setEventsForJarReplacement() {
@@ -155,9 +214,12 @@ public class MyToolWindow {
 		System.out.println("got 'Get versions' request with params : " +
 				"RPA IP=" + rpaDetails.getRpaIp() +
 				", User=" + rpaDetails.getRpaUser() +
-				", Pass=" + rpaDetails.getRpaPass());
+				", Pass=" + rpaDetails.getRpaPass() +
+				", Rpcs Num=" + rpcsDetails.getRpcsNum() +
+				", User=" + rpcsDetails.getRpcsUser() +
+				", Pass=" + rpcsDetails.getRpcsPass());
 
-		String branchVersion = versionsService.getBranchVersion();
+		String branchVersion = versionsService.getBranchVersion(rpcsDetails);
 		String rpaVersion = versionsService.getRpaVersion(rpaDetails);
 
 		branchVersionTextField.setText(branchVersion);
@@ -185,6 +247,18 @@ public class MyToolWindow {
 				", Pass=" + rpaDetails.getRpaPass());
 
 		debugService.debug(rpaDetails);
+	}
+
+	private void executeResetVersion() {
+		String rpaVersion = rpaVersionTextField.getText();
+		System.out.println("got 'Version reset' request with params : " +
+				"Rpcs Num=" + rpcsDetails.getRpcsNum() +
+				", User=" + rpcsDetails.getRpcsUser() +
+				", Pass=" + rpcsDetails.getRpcsPass() +
+				", rpaVersion=" + rpaVersion);
+
+		versionsService.resetVersion(rpcsDetails, rpaVersion);
+
 	}
 
 	JPanel getContent() {

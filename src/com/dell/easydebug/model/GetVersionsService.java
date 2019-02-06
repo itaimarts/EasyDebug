@@ -4,5 +4,7 @@ public interface GetVersionsService {
 
 	String getRpaVersion(RpaDetails rpaDetails);
 
-	String getBranchVersion();
+	String getBranchVersion(RpcsDetails rpcsDetails);
+
+	void resetVersion(RpcsDetails rpcsDetails, String version);
 }
