@@ -1,6 +1,7 @@
 package com.dell.easydebug.ui;
 
 import com.dell.easydebug.model.*;
+import com.dell.easydebug.remotedebug.ConfigureRpaToDebug;
 import com.intellij.openapi.wm.ToolWindow;
 
 import javax.swing.*;
@@ -11,7 +12,7 @@ import java.awt.event.KeyEvent;
 
 public class MyToolWindow {
 
-	private RemoteDebugService debugService;
+	private RemoteDebugService debugService = new ConfigureRpaToDebug();
 	private JarReplacementService jarReplacementService;
 	private GetVersionsService versionsService;
 

@@ -50,8 +50,9 @@ public class SshSession implements AutoCloseable {
 
     int getOutput(ChannelExec channelExec, InputStream in) throws IOException {
         byte[] buffer = new byte[BUFFER_SIZE];
-        int exitStatus;
-        while (true) {
+        int exitStatus = -1;
+        int count = 10;
+        while (count > 0) {
             while (in.available() > 0) {
                 int i = in.read(buffer);
                 if (i < 0) break;
@@ -65,6 +66,7 @@ public class SshSession implements AutoCloseable {
             }
             try {
                 Thread.sleep(THREAD_SLEEP_IN_TIME_MILLIS);
+                count--;
             } catch (InterruptedException ignored) {
             }
         }
