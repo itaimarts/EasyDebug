@@ -11,10 +11,8 @@ import com.jcraft.jsch.JSchException;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.concurrent.CompletableFuture;
 
 public class MyToolWindow {
 
@@ -221,7 +219,6 @@ public class MyToolWindow {
 	}
 
 	private void executeGetVersions() {
-		getVersionsButton.setEnabled(false);
 		System.out.println("got 'Get versions' request with params : " +
 				"RPA IP=" + rpaDetails.getRpaIp() +
 				", User=" + rpaDetails.getRpaUser() +
@@ -241,27 +238,10 @@ public class MyToolWindow {
 
 		branchVersionTextField.setText(branchVersion);
 		rpaVersionTextField.setText(rpaVersion);
-		getVersionsButton.setEnabled(true);
 	}
 
-
-	private void executeJarReplacement() {
-		replaceJarButton.setEnabled(false);
-		System.out.println("got 'Jar replacement' request with params : " +
-				"RPA IP=" + rpaDetails.getRpaIp() +
-				", User=" + rpaDetails.getRpaUser() +
-				", Pass=" + rpaDetails.getRpaPass() +
-				", Rpcs Num=" + rpcsDetails.getRpcsNum() +
-				", User=" + rpcsDetails.getRpcsUser() +
-				", Pass=" + rpcsDetails.getRpcsPass());
-
-		jarReplacementService.replaceJar(rpaDetails, rpcsDetails);
-		CompletableFuture.runAsync(showMessage("Jar has been replace On vRPA", replaceJarButton));
-		replaceJarButton.setEnabled(true);
-	}
 
 	private void executeRemoteDebug() {
-		debugButton.setEnabled(false);
 		System.out.println("got 'Remote debug' request with params : " +
 				"RPA IP=" + rpaDetails.getRpaIp() +
 				", User=" + rpaDetails.getRpaUser() +
@@ -270,12 +250,11 @@ public class MyToolWindow {
 		String precess = precessComboBox.getItemAt(precessComboBox.getSelectedIndex());
 		debugService.debug(rpaDetails, precess);
 
-		CompletableFuture.runAsync(showMessage("Remote debug has completed successfully!", debugButton));
-		debugButton.setEnabled(true);
+		JBPopup message = popupFactory.createMessage("Remote debug has completed successfully!");
+		message.showUnderneathOf(resetVersionButton);
 	}
 
 	private void executeResetVersion() {
-		resetVersionButton.setEnabled(false);
 		String rpaVersion = rpaVersionTextField.getText();
 		System.out.println("got 'Version reset' request with params : " +
 				"Rpcs Num=" + rpcsDetails.getRpcsNum() +
@@ -285,21 +264,10 @@ public class MyToolWindow {
 
 		versionsService.resetVersion(rpcsDetails, rpaVersion);
 
-		CompletableFuture.runAsync(showMessage("Branch has reset to the RPA version", resetVersionButton));
-		resetVersionButton.setEnabled(true);
+		JBPopup message = popupFactory.createMessage("Branch has reset to the RPA version");
+		message.showUnderneathOf(resetVersionButton);
 	}
 
-	private Runnable showMessage(String text, JButton button) {
-		JBPopup message = popupFactory.createMessage(text);
-		message.showUnderneathOf(button);
-		try {
-			wait(2000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		message.cancel();
-		return null;
-	}
 
 	JPanel getContent() {
 		return myToolWindowContent;
