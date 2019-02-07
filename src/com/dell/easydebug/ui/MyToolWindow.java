@@ -9,6 +9,7 @@ import com.jcraft.jsch.JSchException;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
@@ -47,8 +48,8 @@ public class MyToolWindow {
 	private JPasswordField rpcsPasswordFieldForVersionReset;
 
 
-	private RpaDetails rpaDetails = new RpaDetails();
-	private RpcsDetails rpcsDetails = new RpcsDetails();
+	private  static RpaDetails rpaDetails = new RpaDetails();
+	private static RpcsDetails rpcsDetails = new RpcsDetails();
 
 	MyToolWindow(ToolWindow toolWindow) {
 
@@ -259,6 +260,7 @@ public class MyToolWindow {
 
 		String precess = precessComboBox.getItemAt(precessComboBox.getSelectedIndex());
 		debugService.debug(rpaDetails, precess);
+
 	}
 
 	private void executeResetVersion() {

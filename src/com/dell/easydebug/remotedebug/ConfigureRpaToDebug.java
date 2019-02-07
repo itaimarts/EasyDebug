@@ -13,10 +13,10 @@ public class ConfigureRpaToDebug implements RemoteDebugService {
     Session session;
 
     @Override
-    public void debug(RpaDetails rpaDetails, String precess) {
+    public void debug(RpaDetails rpaDetails, String process) {
         try {
             configureRpaProcessToWorkInDebugMode(rpaDetails.getRpaUser()+"@"+rpaDetails.getRpaIp(),
-                    rpaDetails.getRpaPass(), Process.valueOf(precess));
+                    rpaDetails.getRpaPass(), Process.valueOf(process));
         } catch (JSchException e) {
             e.printStackTrace();
         }

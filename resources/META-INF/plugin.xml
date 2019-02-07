@@ -8,7 +8,7 @@
   <idea-version since-build="173.0"/>
 
   <extensions defaultExtensionNs="com.intellij">
-    <toolWindow id="RP Debug" icon="/myToolWindow/plus.png" anchor="right" factoryClass="com.dell.easydebug.ui.ToolWindowFactoryImpl"/>
+    <toolWindow id="RP Debug" icon="/myToolWindow/debugger-13.png" anchor="right" factoryClass="com.dell.easydebug.ui.ToolWindowFactoryImpl"/>
 
   </extensions>
 
