@@ -1,5 +1,5 @@
 <idea-plugin>
-  <id>org.jetbrains.plugins.sample.ToolWindow</id>
+  <id>com.dell.easydebug</id>
   <name>Easy Debug For RecoverPoint</name>
   <description>Plugin to enable remote debugging, replace Jar and reset branch to RPA version.</description>
   <version>1.0</version>
