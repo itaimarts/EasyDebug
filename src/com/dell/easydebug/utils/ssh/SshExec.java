@@ -22,11 +22,8 @@ public class SshExec extends SshSession {
         super(host, password);
     }
 
-    public void execSshCommands(String[] commands) {
-        Arrays.stream(commands).forEach(this::execCommand);
-    }
 
-    public Pair<Integer, String> execCommand(String command) {
+    public Pair<Integer, String> execCommand(String command, int timeoutInSeconds) {
         final Channel channel;
         try {
             channel = getSession().openChannel(CHANNEL_TYPE);
@@ -42,7 +39,7 @@ public class SshExec extends SshSession {
                 channel.setOutputStream(ps);
                 channelExec.connect();
 
-                int exitCode = getOutput(channelExec, in);
+                int exitCode = getOutput(channelExec, in ,timeoutInSeconds);
                 channelExec.disconnect();
                 outputStream = out.toString();
                 System.out.println(outputStream);

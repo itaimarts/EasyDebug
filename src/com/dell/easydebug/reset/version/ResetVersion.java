@@ -18,7 +18,7 @@ public class ResetVersion implements GetVersionsService {
     SshExec sshExec = new SshExec(rpaDetails.getRpaUser() + "@" + rpaDetails.getRpaIp(), rpaDetails.getRpaPass());
 
     sshExec.connect();
-    String rpaVersion = sshExec.execCommand(VERSION).getValue();
+    String rpaVersion = sshExec.execCommand(VERSION, 10).getValue();
     String[] lines = rpaVersion.split("\n");
     List<String> t_version_full_list =  Arrays.asList(lines).stream().filter(s->s.contains("t_version_full")).collect(Collectors.toList());
     if (t_version_full_list.isEmpty()) {
@@ -48,7 +48,7 @@ public class ResetVersion implements GetVersionsService {
 
     try {
       sshExec.connect();
-      sshExec.execCommand(String.format(RESET_VERSION, path, version));
+      sshExec.execCommand(String.format(RESET_VERSION, path, version), 60);
       sshExec.close();
     } catch (JSchException e) {
       e.printStackTrace();

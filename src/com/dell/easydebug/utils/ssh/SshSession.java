@@ -48,12 +48,13 @@ public class SshSession implements AutoCloseable {
         session.connect(connectTimeout);
     }
 
-    int getOutput(ChannelExec channelExec, InputStream in) throws IOException {
+    int getOutput(ChannelExec channelExec, InputStream in, int timeoutInSeconds) throws IOException {
         byte[] buffer = new byte[BUFFER_SIZE];
         int exitStatus = -1;
-        int count = 10;
+        int count = timeoutInSeconds;
         while (count > 0) {
             while (in.available() > 0) {
+                count = timeoutInSeconds;
                 int i = in.read(buffer);
                 if (i < 0) break;
 //                log.debug(new String(buffer, 0, i));

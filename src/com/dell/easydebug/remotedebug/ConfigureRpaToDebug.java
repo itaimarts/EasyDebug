@@ -11,6 +11,7 @@ import static com.dell.easydebug.utils.ssh.SshCommands.*;
 public class ConfigureRpaToDebug implements RemoteDebugService {
 
     Session session;
+    private static final int timeoutInSeconds = 10;
 
     @Override
     public void debug(RpaDetails rpaDetails, String process) {
@@ -37,11 +38,11 @@ public class ConfigureRpaToDebug implements RemoteDebugService {
         runCommandPerProcess(rpaIpAndUserName, password, process, INSERT_CONNECTOR_DEBUG_CONFIGURATION, INSERT_TOMCAT_DEBUG_CONFIGURATION);
         SshExec admin = new SshExec(rpaIpAndUserName, password);
         admin.connect();
-        admin.execCommand(FIREWALL_STOP);
+        admin.execCommand(FIREWALL_STOP, timeoutInSeconds);
         if (Process.CONNECTOR.equals(process)) {
-            admin.execCommand(RESTART_CONNECTOR);
+            admin.execCommand(RESTART_CONNECTOR, timeoutInSeconds);
         } else {
-            admin.execCommand(KILL_TOMCAT);
+            admin.execCommand(KILL_TOMCAT, timeoutInSeconds);
         }
         admin.close();
     }
@@ -54,11 +55,11 @@ public class ConfigureRpaToDebug implements RemoteDebugService {
         SshExec admin = new SshExec(rpaIpAndUserName, password);
         admin.connect();
         if (Process.CONNECTOR.equals(process)) {
-            boolean b = admin.execCommand(insertConnectorDebugConfiguration).getKey() == 0;
+            boolean b = admin.execCommand(insertConnectorDebugConfiguration, timeoutInSeconds).getKey() == 0;
             admin.close();
             return b;
         } else {
-            boolean b = admin.execCommand(insertTomcatDebugConfiguration).getKey() == 0;
+            boolean b = admin.execCommand(insertTomcatDebugConfiguration, timeoutInSeconds).getKey() == 0;
             admin.close();
             return b;
         }
