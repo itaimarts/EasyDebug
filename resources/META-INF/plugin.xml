@@ -1,9 +1,9 @@
 <idea-plugin>
   <id>org.jetbrains.plugins.sample.ToolWindow</id>
-  <name>Tool Window Demo</name>
-  <description>This sample plugin illustrates how to create your custom tool window.</description>
-  <version>2.0</version>
-  <vendor>JetBrains</vendor>
+  <name>Easy Debug For RecoverPoint</name>
+  <description>Plugin to enable remote debugging, replace Jar and reset branch to RPA version.</description>
+  <version>1.0</version>
+  <vendor>DellEMC</vendor>
 
   <idea-version since-build="173.0"/>
 
