@@ -12,4 +12,9 @@
 
   </extensions>
 
+  <actions>
+      <action id="ReplaceJar" class="com.dell.easydebug.replacejar.ReplaceJar" text="Replace Jar">
+          <add-to-group group-id="ProjectViewPopupMenu" anchor="first"/>
+      </action>
+  </actions>
 </idea-plugin>

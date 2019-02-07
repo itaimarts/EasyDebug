@@ -48,8 +48,8 @@ public class MyToolWindow {
 	private JPasswordField rpcsPasswordFieldForVersionReset;
 
 
-	private  static RpaDetails rpaDetails = new RpaDetails();
-	private static RpcsDetails rpcsDetails = new RpcsDetails();
+	public static RpaDetails rpaDetails = new RpaDetails();
+	public static RpcsDetails rpcsDetails = new RpcsDetails();
 
 	MyToolWindow(ToolWindow toolWindow) {
 
