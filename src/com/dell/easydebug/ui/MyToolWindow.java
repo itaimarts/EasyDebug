@@ -3,7 +3,9 @@ package com.dell.easydebug.ui;
 import com.dell.easydebug.model.*;
 import com.dell.easydebug.remotedebug.ConfigureRpaToDebug;
 import com.dell.easydebug.reset.version.ResetVersion;
+import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.ui.popup.PopupFactoryImpl;
 import com.jcraft.jsch.JSchException;
 
 import javax.swing.*;
@@ -12,6 +14,7 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.concurrent.CompletableFuture;
 
 public class MyToolWindow {
 
@@ -47,6 +50,7 @@ public class MyToolWindow {
 	private JFormattedTextField rpcsUserTextFieldForVersionReset;
 	private JPasswordField rpcsPasswordFieldForVersionReset;
 
+	PopupFactoryImpl popupFactory = new PopupFactoryImpl();
 
 	public static RpaDetails rpaDetails = new RpaDetails();
 	public static RpcsDetails rpcsDetails = new RpcsDetails();
@@ -218,6 +222,7 @@ public class MyToolWindow {
 	}
 
 	private void executeGetVersions() {
+		getVersionsButton.setEnabled(false);
 		System.out.println("got 'Get versions' request with params : " +
 				"RPA IP=" + rpaDetails.getRpaIp() +
 				", User=" + rpaDetails.getRpaUser() +
@@ -226,7 +231,8 @@ public class MyToolWindow {
 				", User=" + rpcsDetails.getRpcsUser() +
 				", Pass=" + rpcsDetails.getRpcsPass());
 
-		String branchVersion = "";//versionsService.getBranchVersion(rpcsDetails);
+		String branchVersion = "";
+		//versionsService.getBranchVersion(rpcsDetails);
 		String rpaVersion = null;
 		try {
 			rpaVersion = versionsService.getRpaVersion(rpaDetails);
@@ -236,11 +242,12 @@ public class MyToolWindow {
 
 		branchVersionTextField.setText(branchVersion);
 		rpaVersionTextField.setText(rpaVersion);
-
+		getVersionsButton.setEnabled(true);
 	}
 
 
 	private void executeJarReplacement() {
+		replaceJarButton.setEnabled(false);
 		System.out.println("got 'Jar replacement' request with params : " +
 				"RPA IP=" + rpaDetails.getRpaIp() +
 				", User=" + rpaDetails.getRpaUser() +
@@ -250,9 +257,12 @@ public class MyToolWindow {
 				", Pass=" + rpcsDetails.getRpcsPass());
 
 		jarReplacementService.replaceJar(rpaDetails, rpcsDetails);
+		CompletableFuture.runAsync(showMessage("Jar has been replace On vRPA", replaceJarButton));
+		replaceJarButton.setEnabled(true);
 	}
 
 	private void executeRemoteDebug() {
+		debugButton.setEnabled(false);
 		System.out.println("got 'Remote debug' request with params : " +
 				"RPA IP=" + rpaDetails.getRpaIp() +
 				", User=" + rpaDetails.getRpaUser() +
@@ -261,9 +271,12 @@ public class MyToolWindow {
 		String precess = precessComboBox.getItemAt(precessComboBox.getSelectedIndex());
 		debugService.debug(rpaDetails, precess);
 
+		CompletableFuture.runAsync(showMessage("Remote debug has completed successfully!", debugButton));
+		debugButton.setEnabled(true);
 	}
 
 	private void executeResetVersion() {
+		resetVersionButton.setEnabled(false);
 		String rpaVersion = rpaVersionTextField.getText();
 		System.out.println("got 'Version reset' request with params : " +
 				"Rpcs Num=" + rpcsDetails.getRpcsNum() +
@@ -273,6 +286,20 @@ public class MyToolWindow {
 
 		versionsService.resetVersion(rpcsDetails, rpaVersion);
 
+		CompletableFuture.runAsync(showMessage("Branch has reset to the RPA version", resetVersionButton));
+		resetVersionButton.setEnabled(true);
+	}
+
+	private Runnable showMessage(String text, JButton button) {
+		JBPopup message = popupFactory.createMessage(text);
+		message.showUnderneathOf(button);
+		try {
+			wait(2000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		message.cancel();
+		return null;
 	}
 
 	JPanel getContent() {
