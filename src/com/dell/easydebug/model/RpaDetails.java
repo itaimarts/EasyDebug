@@ -4,7 +4,7 @@ package com.dell.easydebug.model;
 public class RpaDetails {
 	private String rpaIp = "127.0.0.1";
 	private String rpaUser = "root";
-	private String rpaPass = "";
+	private String rpaPass = "admin";
 
 	public String getRpaIp() {
 		return rpaIp;

@@ -192,7 +192,6 @@ public class MyToolWindow {
 			}
 		});
 
-		replaceJarButton.addActionListener(event -> executeJarReplacement());
 	}
 
 	private void setEventsForRemoteDebugging() {
