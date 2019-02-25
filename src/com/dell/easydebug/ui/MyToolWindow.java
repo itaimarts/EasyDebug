@@ -127,7 +127,7 @@ public class MyToolWindow {
 
 		getVersionsButton.addActionListener(event -> executeGetVersions());
 
-		rpcsNumberSpinnerForVersionReset.addPropertyChangeListener(event -> rpcsDetails.setRpcsNum((Integer) rpcsNumberSpinnerForVersionReset.getValue()));
+		rpcsNumberSpinnerForVersionReset.addChangeListener(event -> rpcsDetails.setRpcsNum((Integer) rpcsNumberSpinnerForVersionReset.getValue()));
 
 		rpcsUserTextFieldForVersionReset.addKeyListener(new KeyAdapter() {
 			@Override
@@ -172,7 +172,7 @@ public class MyToolWindow {
 			}
 		});
 
-		rpcsNumberSpinnerForJarReplacement.addPropertyChangeListener(event -> rpcsDetails.setRpcsNum((Integer) rpcsNumberSpinnerForJarReplacement.getValue()));
+		rpcsNumberSpinnerForJarReplacement.addChangeListener(event -> rpcsDetails.setRpcsNum((Integer) rpcsNumberSpinnerForJarReplacement.getValue()));
 
 		rpcsUserTextFieldForJarReplacement.addKeyListener(new KeyAdapter() {
 			@Override

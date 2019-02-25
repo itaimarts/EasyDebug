@@ -25,7 +25,7 @@ public class ReplaceJar extends AnAction {
     VirtualFile file = VIRTUAL_FILE.getData(e.getDataContext());
     if (file.isDirectory()) {
       if (file.findChild("KMakefile") != null) {
-        String rpcsHost = rpcsDetails.getRpcsUser() + "@rpcs02";// + rpcsDetails.getRpcsNum();
+        String rpcsHost = rpcsDetails.getRpcsUser() + "@rpcs0" + rpcsDetails.getRpcsNum();
         SshExec admin = new SshExec(rpcsHost, rpcsDetails.getRpcsPass());
         File archive = new File("K:\\archive\\RP4VM\\master\\rpa\\classes");
         // TODO - safety
