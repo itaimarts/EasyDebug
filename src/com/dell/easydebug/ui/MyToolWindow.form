@@ -376,10 +376,22 @@
               </component>
               <component id="5a8b4" class="javax.swing.JLabel">
                 <constraints>
-                  <grid row="8" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="9" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <text value="In order to replace Jar, right click the pom of the relevant folder"/>
+                </properties>
+              </component>
+              <component id="44cb9" class="javax.swing.JTextArea" binding="rpcsOutput">
+                <constraints>
+                  <grid row="8" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="50"/>
+                  </grid>
+                </constraints>
+                <properties>
+                  <editable value="true"/>
+                  <focusCycleRoot value="true"/>
+                  <text value=""/>
                 </properties>
               </component>
             </children>
