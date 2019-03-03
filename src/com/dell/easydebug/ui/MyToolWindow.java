@@ -12,9 +12,13 @@ import com.jcraft.jsch.JSchException;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.text.DefaultCaret;
+import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.PrintStream;
+
+import static com.sun.javafx.fxml.expression.Expression.add;
 
 public class MyToolWindow {
 
@@ -196,6 +200,9 @@ public class MyToolWindow {
 				rpcsDetails.setRpcsPass(rpcsPasswordFieldForJarReplacement.getPassword());
 			}
 		});
+
+		DefaultCaret caret = (DefaultCaret)rpcsOutput.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 	}
 
 	private void setEventsForRemoteDebugging() {

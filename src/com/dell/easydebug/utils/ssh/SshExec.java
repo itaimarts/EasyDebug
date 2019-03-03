@@ -31,16 +31,14 @@ public class SshExec extends SshSession {
             channelExec.setErrStream(System.err, true);
             InputStream in = channelExec.getInputStream();
 
-            try (ByteArrayOutputStream out = new ByteArrayOutputStream(); PrintStream printStream = new PrintStream (out)) {
-                channel.setOutputStream(replaceJarOutput);
-                channelExec.connect();
+            channel.setOutputStream(replaceJarOutput, true);
+            channelExec.connect();
 
-                int exitCode = getOutput(channelExec, in ,timeoutInSeconds);
-                channelExec.disconnect();
-                String text = outputStream.toString();
+            int exitCode = getOutput(channelExec, in ,timeoutInSeconds);
+            channelExec.disconnect();
+            String text = outputStream.toString();
 
-                return new Pair(exitCode, text);
-            }
+            return new Pair(exitCode, text);
         } catch (JSchException | IOException e) {
             throw new RuntimeException(e);
         }
