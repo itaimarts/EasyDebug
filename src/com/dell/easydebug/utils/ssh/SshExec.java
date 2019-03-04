@@ -5,15 +5,12 @@ import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSchException;
 import javafx.util.Pair;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintStream;
+import java.io.*;
 import java.util.Arrays;
 
-public class SshExec extends SshSession {
+import static com.dell.easydebug.ui.MyToolWindow.replaceJarOutput;
 
-    private String outputStream;
+public class SshExec extends SshSession {
 
     private final static String CHANNEL_TYPE = "exec";
     private final static int THREAD_SLEEP_IN_TIME_MILLIS = 1000;
@@ -23,7 +20,7 @@ public class SshExec extends SshSession {
     }
 
 
-    public Pair<Integer, String> execCommand(String command, int timeoutInSeconds) {
+    public Pair<Integer, String> execCommand(String command, int timeoutInSeconds, OutputStream outputStream) {
         final Channel channel;
         try {
             channel = getSession().openChannel(CHANNEL_TYPE);
@@ -34,21 +31,21 @@ public class SshExec extends SshSession {
             channelExec.setErrStream(System.err, true);
             InputStream in = channelExec.getInputStream();
 
-            try (ByteArrayOutputStream out = new ByteArrayOutputStream(); PrintStream ps = new PrintStream(out)) {
+            channel.setOutputStream(replaceJarOutput, true);
+            channelExec.connect();
 
-                channel.setOutputStream(ps);
-                channelExec.connect();
+            int exitCode = getOutput(channelExec, in ,timeoutInSeconds);
+            channelExec.disconnect();
+            String text = outputStream.toString();
 
-                int exitCode = getOutput(channelExec, in ,timeoutInSeconds);
-                channelExec.disconnect();
-                outputStream = out.toString();
-                System.out.println(outputStream);
-
-                return new Pair(exitCode, outputStream);
-            }
+            return new Pair(exitCode, text);
         } catch (JSchException | IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public Pair<Integer, String> execCommand(String command, int timeoutInSeconds) {
+      return execCommand(command, timeoutInSeconds, new ByteArrayOutputStream());
     }
 
 }

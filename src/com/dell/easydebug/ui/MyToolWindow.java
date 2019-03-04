@@ -3,6 +3,7 @@ package com.dell.easydebug.ui;
 import com.dell.easydebug.model.*;
 import com.dell.easydebug.remotedebug.ConfigureRpaToDebug;
 import com.dell.easydebug.reset.version.ResetVersion;
+import com.dell.easydebug.utils.output.TextAreaOutputStream;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.popup.PopupFactoryImpl;
@@ -11,8 +12,13 @@ import com.jcraft.jsch.JSchException;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.text.DefaultCaret;
+import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.PrintStream;
+
+import static com.sun.javafx.fxml.expression.Expression.add;
 
 public class MyToolWindow {
 
@@ -47,13 +53,18 @@ public class MyToolWindow {
 	private JSpinner rpcsNumberSpinnerForVersionReset;
 	private JFormattedTextField rpcsUserTextFieldForVersionReset;
 	private JPasswordField rpcsPasswordFieldForVersionReset;
+	private JTextArea rpcsOutput;
 
 	PopupFactoryImpl popupFactory = new PopupFactoryImpl();
 
 	public static RpaDetails rpaDetails = new RpaDetails();
 	public static RpcsDetails rpcsDetails = new RpcsDetails();
+	public static PrintStream replaceJarOutput;
+
 
 	MyToolWindow(ToolWindow toolWindow) {
+
+		replaceJarOutput = new PrintStream( new TextAreaOutputStream( rpcsOutput ) );
 
 		setEventsForRemoteDebugging();
 
@@ -190,6 +201,8 @@ public class MyToolWindow {
 			}
 		});
 
+		DefaultCaret caret = (DefaultCaret)rpcsOutput.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 	}
 
 	private void setEventsForRemoteDebugging() {
